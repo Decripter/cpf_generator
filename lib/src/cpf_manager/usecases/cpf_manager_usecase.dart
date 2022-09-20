@@ -1,9 +1,4 @@
-abstract class ICpfManager {
-  bool cpfValidator(String cpf);
-  String cpfGenerator();
-}
-
-class CpfManager extends ICpfManager {
+class CpfManager {
   @override
   String cpfGenerator() {
     // TODO: implement cpfGenerator
