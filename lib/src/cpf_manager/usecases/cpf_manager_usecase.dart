@@ -1,8 +1,21 @@
+import 'dart:math';
+
 class CpfManager {
   //
 
   String cpfGenerator() {
-    return '';
+    var validatorDigit = '';
+    var cpf = '';
+    for (int digit = 0; digit < 9; digit++) {
+      cpf = '$cpf${Random().nextInt(9)}';
+    }
+
+    validatorDigit =
+        '$validatorDigit${_getValidatorDigit(cpf: cpf, digitsForLoop: 8)}';
+    validatorDigit =
+        '$validatorDigit${_getValidatorDigit(cpf: '$cpf$validatorDigit', digitsForLoop: 9)}';
+
+    return '$cpf$validatorDigit';
   }
 
   bool cpfValidator(String cpf) {
