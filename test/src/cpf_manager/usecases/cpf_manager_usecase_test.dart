@@ -29,4 +29,12 @@ void main() {
       expect(isValid, false);
     });
   });
+
+  group('Tests of cpfGenerator function', () {
+    test('Should return a valid cpf', (() {
+      var cpf = cpfManager.cpfGenerator();
+      var isValid = cpfManager.cpfValidator(cpf);
+      expect(isValid, true);
+    }));
+  });
 }
