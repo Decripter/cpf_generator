@@ -23,12 +23,6 @@ class CPFDocumentModel extends DocumentModel {
   }
 
   @override
-  String removeMask(String document) {
-    String documentClear = document.replaceAll(RegExp(r'\D'), '');
-    return documentClear;
-  }
-
-  @override
   String generateMaskedDocument() {
     String document = documentGenerator();
     String documentMasked = applyMask(document);
