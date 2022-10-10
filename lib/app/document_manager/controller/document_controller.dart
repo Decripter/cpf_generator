@@ -4,7 +4,6 @@ enum DocumentTypeClass { cpf, cnpj }
 
 class DocumentController {
   DocumentType documentType = DocumentType.cpf();
-  DocumentController();
 
   final DocumentType _cpfType = DocumentType.cpf();
   final DocumentType _cnpjType = DocumentType.cnpj();
