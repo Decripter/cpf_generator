@@ -1,7 +1,6 @@
+import 'package:cpf_generator/app/document_manager/controller/document_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../controller/document_type.dart';
 
 class DocumentManagerPage extends StatefulWidget {
   const DocumentManagerPage({super.key});
@@ -11,122 +10,146 @@ class DocumentManagerPage extends StatefulWidget {
 }
 
 class _DocumentManagerPageState extends State<DocumentManagerPage> {
+  late DocumentTypeClass _documentTypeClass;
+  DocumentController controller = DocumentController();
+
   late bool _isValid;
-  late DocumentType? _document;
   late FocusNode _textFieldFocusNode;
-  late TextEditingController _textEditDocumentController;
+  late TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
-    _isValid = false;
-    _document = DocumentType.cpf();
+    _documentTypeClass = DocumentTypeClass.cpf;
+    _textController = TextEditingController();
+    _isValid = controller.isValid;
     _textFieldFocusNode = FocusNode();
-    _textEditDocumentController = TextEditingController();
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color valid = Color.fromARGB(255, 223, 248, 216);
+    const Color invalid = Color.fromARGB(255, 248, 218, 216);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Document Manager"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(28.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
+      body: Stack(
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            color: _isValid ? valid : invalid,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(28.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: TextFormField(
-                    autofocus: true,
-                    focusNode: _textFieldFocusNode,
-                    controller: _textEditDocumentController,
-                    decoration: InputDecoration(
-                      hintText: _document!.documentFormHint,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        autofocus: true,
+                        focusNode: _textFieldFocusNode,
+                        controller: _textController,
+                        onChanged: (value) {
+                          setState(() {
+                            controller.value = value;
+                            _isValid = controller.isValid;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: controller.documentHint,
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r"[\d./-]+")),
+                          controller.documentFormatter
+                        ],
+                      ),
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r"[\d./-]+")),
-                      _document!.documentFormatter
+                    _isValid
+                        ? const Icon(Icons.verified, color: Colors.green)
+                        : const Icon(Icons.cancel, color: Colors.red),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 38.0, bottom: 38.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _textController.text = controller.clearDocument;
+                          _textFieldFocusNode.requestFocus();
+                          setState(() {
+                            _isValid = controller.isValid;
+                          });
+                        },
+                        child: const Text('CLEAR'),
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              controller.value = _textController.text;
+                              _isValid = controller.isValid;
+                            });
+                          },
+                          child: const Text('CHECK')),
                     ],
                   ),
                 ),
-                _isValid
-                    ? const Icon(Icons.verified, color: Colors.green)
-                    : const Icon(Icons.cancel, color: Colors.red),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile(
+                        title: const Text("CPF"),
+                        value: DocumentTypeClass.cpf,
+                        groupValue: _documentTypeClass,
+                        onChanged: (DocumentTypeClass? documentType) {
+                          _documentTypeClass = documentType!;
+                          setState(() {
+                            _textController.text = controller.clearDocument;
+                            _isValid = false;
+                            _textFieldFocusNode.requestFocus();
+                            controller.changeDocumentType(documentType);
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: const Text("CNPJ"),
+                        value: DocumentTypeClass.cnpj,
+                        groupValue: _documentTypeClass,
+                        onChanged: (DocumentTypeClass? documentType) {
+                          _documentTypeClass = documentType!;
+                          setState(() {
+                            _textController.text = controller.clearDocument;
+
+                            _isValid = false;
+                            _textFieldFocusNode.requestFocus();
+                            controller.changeDocumentType(documentType);
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 38.0, bottom: 38.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      _textEditDocumentController.text = '';
-                      _textFieldFocusNode.requestFocus();
-                      setState(() {
-                        _isValid = false;
-                      });
-                    },
-                    child: const Text('CLEAR'),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          String document = _textEditDocumentController.text;
-                          _isValid = _document!.documentModel
-                              .validateDocument(document);
-                        });
-                      },
-                      child: const Text('CHECK')),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: RadioListTile(
-                    title: const Text("CPF"),
-                    value: DocumentType.cpf().documentTypeClass,
-                    groupValue: _document!.documentTypeClass,
-                    onChanged: (DocumentTypeClass? value) {
-                      setState(() {
-                        _textEditDocumentController.text = '';
-                        _isValid = false;
-                        _textFieldFocusNode.requestFocus();
-                        _document = DocumentType.cpf();
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: RadioListTile(
-                    title: const Text("CNPJ"),
-                    value: DocumentType.cnpj().documentTypeClass,
-                    groupValue: _document!.documentTypeClass,
-                    onChanged: (DocumentTypeClass? value) {
-                      setState(() {
-                        _textEditDocumentController.text = '';
-                        _isValid = false;
-                        _textFieldFocusNode.requestFocus();
-                        _document = DocumentType.cnpj();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _textEditDocumentController.text =
-              _document!.documentModel.generateMaskedDocument();
+          setState(() {
+            _textController.text = controller.randomDocument;
+            _isValid = controller.isValid;
+          });
         },
         child: const Icon(Icons.casino),
       ),

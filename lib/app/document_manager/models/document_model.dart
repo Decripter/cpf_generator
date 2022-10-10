@@ -1,4 +1,5 @@
 abstract class DocumentModel {
+  late String value;
   String applyMask(String document);
   bool validateDocument(String document);
   String documentGenerator();
