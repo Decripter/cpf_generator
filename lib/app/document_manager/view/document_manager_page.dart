@@ -15,7 +15,7 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
 
   late bool _isValid;
   late FocusNode _textFieldFocusNode;
-  late TextEditingController _textController = TextEditingController();
+  TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
