@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'components/document_type.dart';
+import '../controller/document_type.dart';
 
 class DocumentManagerPage extends StatefulWidget {
-  const DocumentManagerPage({Key? key}) : super(key: key);
+  const DocumentManagerPage({super.key});
 
   @override
   State<DocumentManagerPage> createState() => _DocumentManagerPageState();
 }
 
 class _DocumentManagerPageState extends State<DocumentManagerPage> {
-  late TextEditingController documentController;
-  late FocusNode textFieldFocusNode;
   late bool _isValid;
   late DocumentType? _document;
+  late FocusNode _textFieldFocusNode;
+  late TextEditingController _textEditDocumentController;
 
   @override
   void initState() {
     _isValid = false;
     _document = DocumentType.cpf();
-    textFieldFocusNode = FocusNode();
-    documentController = TextEditingController();
-    textFieldFocusNode.requestFocus();
+    _textFieldFocusNode = FocusNode();
+    _textEditDocumentController = TextEditingController();
 
     super.initState();
   }
@@ -43,8 +42,8 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                 Expanded(
                   child: TextFormField(
                     autofocus: true,
-                    focusNode: textFieldFocusNode,
-                    controller: documentController,
+                    focusNode: _textFieldFocusNode,
+                    controller: _textEditDocumentController,
                     decoration: InputDecoration(
                       hintText: _document!.documentFormHint,
                     ),
@@ -56,14 +55,8 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                   ),
                 ),
                 _isValid
-                    ? const Icon(
-                        Icons.verified,
-                        color: Colors.green,
-                      )
-                    : const Icon(
-                        Icons.cancel,
-                        color: Colors.red,
-                      ),
+                    ? const Icon(Icons.verified, color: Colors.green)
+                    : const Icon(Icons.cancel, color: Colors.red),
               ],
             ),
             Padding(
@@ -73,14 +66,18 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      documentController.text = '';
+                      _textEditDocumentController.text = '';
+                      _textFieldFocusNode.requestFocus();
+                      setState(() {
+                        _isValid = false;
+                      });
                     },
                     child: const Text('CLEAR'),
                   ),
                   ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          String document = documentController.text;
+                          String document = _textEditDocumentController.text;
                           _isValid = _document!.documentModel
                               .validateDocument(document);
                         });
@@ -98,8 +95,9 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                     groupValue: _document!.documentTypeClass,
                     onChanged: (DocumentTypeClass? value) {
                       setState(() {
-                        documentController.text = '';
-                        textFieldFocusNode.requestFocus();
+                        _textEditDocumentController.text = '';
+                        _isValid = false;
+                        _textFieldFocusNode.requestFocus();
                         _document = DocumentType.cpf();
                       });
                     },
@@ -112,8 +110,9 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                     groupValue: _document!.documentTypeClass,
                     onChanged: (DocumentTypeClass? value) {
                       setState(() {
-                        documentController.text = '';
-                        textFieldFocusNode.requestFocus();
+                        _textEditDocumentController.text = '';
+                        _isValid = false;
+                        _textFieldFocusNode.requestFocus();
                         _document = DocumentType.cnpj();
                       });
                     },
@@ -126,7 +125,7 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          documentController.text =
+          _textEditDocumentController.text =
               _document!.documentModel.generateMaskedDocument();
         },
         child: const Icon(Icons.casino),

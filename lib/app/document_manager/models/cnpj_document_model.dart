@@ -25,6 +25,9 @@ class CNPJDocumentModel extends DocumentModel {
   bool validateDocument(String document) {
     document = removeMask(document);
     String documentOriginal = document;
+    if (document.length != 14) {
+      return false;
+    }
 
     document = document.substring(0, 12);
 
