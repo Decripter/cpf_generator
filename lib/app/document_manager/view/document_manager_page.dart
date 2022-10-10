@@ -18,6 +18,7 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
 
   @override
   void initState() {
+    _isValid = false;
     _document = DocumentType.cpf();
     textFieldFocusNode = FocusNode();
     documentController = TextEditingController();
@@ -37,17 +38,32 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
-              autofocus: true,
-              focusNode: textFieldFocusNode,
-              controller: documentController,
-              decoration: InputDecoration(
-                hintText: _document!.documentFormHint,
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r"[\d./-]+")),
-                _document!.documentFormatter
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    autofocus: true,
+                    focusNode: textFieldFocusNode,
+                    controller: documentController,
+                    decoration: InputDecoration(
+                      hintText: _document!.documentFormHint,
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r"[\d./-]+")),
+                      _document!.documentFormatter
+                    ],
+                  ),
+                ),
+                _isValid
+                    ? const Icon(
+                        Icons.verified,
+                        color: Colors.green,
+                      )
+                    : const Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                      ),
               ],
             ),
             Padding(
@@ -63,9 +79,11 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        String document = documentController.text;
-                        _isValid =
-                            _document!.documentModel.validateDocument(document);
+                        setState(() {
+                          String document = documentController.text;
+                          _isValid = _document!.documentModel
+                              .validateDocument(document);
+                        });
                       },
                       child: const Text('CHECK')),
                 ],
