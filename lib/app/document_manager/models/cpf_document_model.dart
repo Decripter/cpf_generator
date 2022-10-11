@@ -1,44 +1,44 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:math';
 
 import 'document_model.dart';
 
 class CPFDocumentModel extends DocumentModel {
+  @override
+  // ignore: overridden_fields
   String value;
   CPFDocumentModel(this.value);
 
   @override
   String documentGenerator() {
-    var validatorDigit = '';
-    var cpf = '';
-    for (int digit = 0; digit < 9; digit++) {
-      cpf = '$cpf${Random().nextInt(9)}';
+    var document = '';
+    final documentBuffer = StringBuffer(document);
+    for (var digit = 0; digit < 9; digit++) {
+      documentBuffer.write('$document${Random().nextInt(9)}');
     }
+    document = documentBuffer.toString();
 
-    validatorDigit =
-        '$validatorDigit${_getValidatorDigit(cpf: cpf, digitsForLoop: 8)}';
-    validatorDigit =
-        '$validatorDigit${_getValidatorDigit(cpf: '$cpf$validatorDigit', digitsForLoop: 9)}';
-
-    return '$cpf$validatorDigit';
+    return document = _applyValidatorDigit(document: document);
   }
 
   @override
   String generateMaskedDocument() {
-    String document = documentGenerator();
-    String documentMasked = applyMask(document);
+    final document = documentGenerator();
+    final documentMasked = applyMask(document);
     return documentMasked;
   }
 
   @override
   String applyMask(String document) {
-    String documentMasked = '';
-    for (int digit = 0; digit < document.length; digit++) {
+    var documentMasked = '';
+    for (var digit = 0; digit < document.length; digit++) {
       if (digit == 3 || digit == 6) {
-        documentMasked = "$documentMasked.${document[digit]}";
+        documentMasked = '$documentMasked.${document[digit]}';
       } else if (digit == 9) {
-        documentMasked = "$documentMasked-${document[digit]}";
+        documentMasked = '$documentMasked-${document[digit]}';
       } else {
-        documentMasked = "$documentMasked${document[digit]}";
+        documentMasked = '$documentMasked${document[digit]}';
       }
     }
     return documentMasked;
@@ -46,34 +46,37 @@ class CPFDocumentModel extends DocumentModel {
 
   @override
   bool validateDocument(String document) {
-    document = removeMask(document);
-    if (document.isEmpty || document.length != 11) {
+    var documentToValidate = removeMask(document);
+    final documentOriginal = documentToValidate;
+
+    if (documentToValidate.isEmpty || documentToValidate.length != 11) {
       return false;
     }
 
-    var validatorDigit = '';
-    var validatorDigitOriginal = document.substring(9, 11);
+    documentToValidate = documentToValidate.substring(0, 9);
+    documentToValidate = _applyValidatorDigit(document: documentToValidate);
 
-    validatorDigit =
-        '$validatorDigit${_getValidatorDigit(cpf: document, digitsForLoop: 8)}';
-    validatorDigit =
-        '$validatorDigit${_getValidatorDigit(cpf: document, digitsForLoop: 9)}';
-
-    return (int.parse(validatorDigit) == int.parse(validatorDigitOriginal));
+    return documentOriginal == documentToValidate;
   }
 
-  int _getValidatorDigit({required String cpf, required int digitsForLoop}) {
-    var cpfSum = 0;
-    var mult = 2;
-    for (int digit = digitsForLoop; digit >= 0; digit--) {
-      cpfSum = (int.parse(cpf[digit]) * mult) + cpfSum;
-      mult++;
-    }
+  String _applyValidatorDigit({
+    required String document,
+  }) {
+    var documentWithDigit = document;
+    while (documentWithDigit.length < 11) {
+      var cpfSum = 0;
+      var mult = 2;
+      for (var digit = documentWithDigit.length - 1; digit >= 0; digit--) {
+        cpfSum = (int.parse(documentWithDigit[digit]) * mult) + cpfSum;
+        mult++;
+      }
 
-    if (cpfSum % 11 < 2) {
-      return 0;
-    } else {
-      return 11 - (cpfSum % 11);
+      if (cpfSum % 11 < 2) {
+        documentWithDigit = '${documentWithDigit}0';
+      } else {
+        documentWithDigit = '$documentWithDigit${11 - (cpfSum % 11)}';
+      }
     }
+    return documentWithDigit;
   }
 }

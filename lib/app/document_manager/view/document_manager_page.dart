@@ -2,7 +2,9 @@ import 'package:cpf_generator/app/document_manager/controller/document_controlle
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+///DocumentManager page
 class DocumentManagerPage extends StatefulWidget {
+  ///Constructor
   const DocumentManagerPage({super.key});
 
   @override
@@ -10,31 +12,31 @@ class DocumentManagerPage extends StatefulWidget {
 }
 
 class _DocumentManagerPageState extends State<DocumentManagerPage> {
-  late DocumentTypeClass _documentTypeClass;
-  DocumentController controller = DocumentController();
-
   late bool _isValid;
   late FocusNode _textFieldFocusNode;
-  TextEditingController _textController = TextEditingController();
+  late DocumentTypeClass _documentTypeClass;
 
+  DocumentController controller = DocumentController();
+  TextEditingController _textController = TextEditingController();
   @override
   void initState() {
+    super.initState();
     _documentTypeClass = DocumentTypeClass.cpf;
     _textController = TextEditingController();
     _isValid = controller.isValid;
     _textFieldFocusNode = FocusNode();
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const Color valid = Color.fromARGB(255, 223, 248, 216);
-    const Color invalid = Color.fromARGB(255, 248, 218, 216);
+    const valid = Color.fromARGB(255, 223, 248, 216);
+    const invalid = Color.fromARGB(255, 248, 218, 216);
+    const validIcon = Icon(Icons.verified, color: Colors.green);
+    const invalidIcon = Icon(Icons.cancel, color: Colors.red);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Document Manager"),
+        title: const Text('Document Manager'),
       ),
       body: Stack(
         children: [
@@ -43,7 +45,7 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
             color: _isValid ? valid : invalid,
           ),
           Padding(
-            padding: const EdgeInsets.all(28.0),
+            padding: const EdgeInsets.all(28),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -66,39 +68,39 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp(r"[\d./-]+")),
+                            RegExp(r'[\d./-]+'),
+                          ),
                           controller.documentFormatter
                         ],
                       ),
                     ),
-                    _isValid
-                        ? const Icon(Icons.verified, color: Colors.green)
-                        : const Icon(Icons.cancel, color: Colors.red),
+                    if (_isValid) validIcon else invalidIcon,
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 38.0, bottom: 38.0),
+                  padding: const EdgeInsets.only(top: 38, bottom: 38),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          _textController.text = controller.clearDocument;
-                          _textFieldFocusNode.requestFocus();
                           setState(() {
+                            _textController.text = controller.clearDocument;
+                            _textFieldFocusNode.requestFocus();
                             _isValid = controller.isValid;
                           });
                         },
                         child: const Text('CLEAR'),
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              controller.value = _textController.text;
-                              _isValid = controller.isValid;
-                            });
-                          },
-                          child: const Text('CHECK')),
+                        onPressed: () {
+                          setState(() {
+                            controller.value = _textController.text;
+                            _isValid = controller.isValid;
+                          });
+                        },
+                        child: const Text('CHECK'),
+                      ),
                     ],
                   ),
                 ),
@@ -106,14 +108,14 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                   children: [
                     Expanded(
                       child: RadioListTile(
-                        title: const Text("CPF"),
+                        title: const Text('CPF'),
                         value: DocumentTypeClass.cpf,
                         groupValue: _documentTypeClass,
                         onChanged: (DocumentTypeClass? documentType) {
-                          _documentTypeClass = documentType!;
                           setState(() {
+                            _documentTypeClass = documentType!;
                             _textController.text = controller.clearDocument;
-                            _isValid = false;
+                            _isValid = controller.isValid;
                             _textFieldFocusNode.requestFocus();
                             controller.changeDocumentType(documentType);
                           });
@@ -122,15 +124,14 @@ class _DocumentManagerPageState extends State<DocumentManagerPage> {
                     ),
                     Expanded(
                       child: RadioListTile(
-                        title: const Text("CNPJ"),
+                        title: const Text('CNPJ'),
                         value: DocumentTypeClass.cnpj,
                         groupValue: _documentTypeClass,
                         onChanged: (DocumentTypeClass? documentType) {
                           _documentTypeClass = documentType!;
                           setState(() {
                             _textController.text = controller.clearDocument;
-
-                            _isValid = false;
+                            _isValid = controller.isValid;
                             _textFieldFocusNode.requestFocus();
                             controller.changeDocumentType(documentType);
                           });

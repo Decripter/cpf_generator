@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs
+
+/// Class base for other documents
 abstract class DocumentModel {
   late String value;
   String applyMask(String document);
@@ -5,8 +8,9 @@ abstract class DocumentModel {
   String documentGenerator();
   String generateMaskedDocument();
 
+  /// It's responsable to remove the mask( . - / ) of documents
   String removeMask(String document) {
-    String documentClear = document.replaceAll(RegExp(r'\D'), '');
-    return documentClear;
+    final documentClean = document.replaceAll(RegExp(r'\D'), '');
+    return documentClean;
   }
 }
