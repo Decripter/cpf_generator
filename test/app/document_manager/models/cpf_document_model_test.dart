@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   final DocumentModel cpfManager = CPFDocumentModel('');
 
-  group('Tests of cpfValidator function', () {
+  group('Tests for cpfModel =>', () {
     test('shoud return false if is empty', () {
       final isValid = cpfManager.validateDocument('');
       expect(isValid, false);
@@ -31,10 +31,6 @@ void main() {
       final isValid = cpfManager.validateDocument('57435863010');
       expect(isValid, false);
     });
-  });
-
-  group('Tests of cpfGenerator function', () {
-    // ignore: unnecessary_parenthesis
     test(
       'Should return a valid cpf',
       // ignore: unnecessary_parenthesis

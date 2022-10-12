@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   DocumentController controller = DocumentController();
-  test('description', () {
+  test('test for controller', () {
     controller.changeDocumentType(DocumentTypeClass.cpf);
     controller.randomDocument;
   });
