@@ -19,17 +19,16 @@ class CNPJDocumentModel extends DocumentModel {
     for (var digit = 0; digit < 8; digit++) {
       documentBuffer.write('$document${Random().nextInt(9)}');
     }
+    documentBuffer
+      ..write('${document}000')
+      ..write('$document${Random().nextInt(8) + 1}');
     document = documentBuffer.toString();
-    document = '${document}000';
-    document = '$document${Random().nextInt(8) + 1}';
 
     document = applyValidatorDigit(
       document: document,
-      mult: 5,
     );
     document = applyValidatorDigit(
       document: document,
-      mult: 6,
     );
     return document;
   }
@@ -46,11 +45,9 @@ class CNPJDocumentModel extends DocumentModel {
 
     documentToValidate = applyValidatorDigit(
       document: documentToValidate,
-      mult: 5,
     );
     documentToValidate = applyValidatorDigit(
       document: documentToValidate,
-      mult: 6,
     );
 
     final result = documentOriginal == documentToValidate;
@@ -61,10 +58,9 @@ class CNPJDocumentModel extends DocumentModel {
   /// and return the document with the validator digit
   String applyValidatorDigit({
     required String document,
-    required int mult,
   }) {
     var sumDigits = 0;
-    var multDigit = mult;
+    var multDigit = document.length - 7;
     var documentWithDigit = document;
     for (var digit = 0; digit < documentWithDigit.length; digit++) {
       sumDigits = sumDigits + (multDigit * int.parse(document[digit]));
