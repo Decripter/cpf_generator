@@ -2,9 +2,11 @@ import 'package:document_manager/app/document_manager/controller/document_contro
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  DocumentController controller = DocumentController();
-  test('test for controller', () {
-    controller.changeDocumentType(DocumentTypeClass.cpf);
-    controller.randomDocument;
+  test('should return a document valid', () {
+    final controller = DocumentController()
+      ..changeDocumentType(DocumentTypeClass.cpf)
+      ..randomDocument;
+    final result = controller.isValid;
+    expect(result, true);
   });
 }

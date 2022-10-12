@@ -1,11 +1,16 @@
 import 'package:flutter/services.dart';
 
+/// abstract clas base for the formatters that will be created to apply on form
 abstract class DocumentFormatter extends TextInputFormatter {}
+
+/// this class represents the mask that the form will aply on CPF document
 
 class CPFDocumentFormatter extends DocumentFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final newValueLength = newValue.text.length;
     var selectionIndex = newValue.selection.end;
 
@@ -40,10 +45,13 @@ class CPFDocumentFormatter extends DocumentFormatter {
   }
 }
 
+/// this class represents the mask that the form will aply on CNPJ document
 class CNPJDocumentFormatter extends DocumentFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final newValueLength = newValue.text.length;
     var selectionIndex = newValue.selection.end;
 
