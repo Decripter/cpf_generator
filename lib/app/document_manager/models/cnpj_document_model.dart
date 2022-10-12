@@ -24,12 +24,8 @@ class CNPJDocumentModel extends DocumentModel {
       ..write('$document${Random().nextInt(8) + 1}');
     document = documentBuffer.toString();
 
-    document = applyValidatorDigit(
-      document: document,
-    );
-    document = applyValidatorDigit(
-      document: document,
-    );
+    document = applyValidatorDigit(document: document);
+    document = applyValidatorDigit(document: document);
     return document;
   }
 
@@ -43,12 +39,8 @@ class CNPJDocumentModel extends DocumentModel {
 
     documentToValidate = documentToValidate.substring(0, 12);
 
-    documentToValidate = applyValidatorDigit(
-      document: documentToValidate,
-    );
-    documentToValidate = applyValidatorDigit(
-      document: documentToValidate,
-    );
+    documentToValidate = applyValidatorDigit(document: documentToValidate);
+    documentToValidate = applyValidatorDigit(document: documentToValidate);
 
     final result = documentOriginal == documentToValidate;
     return result;
@@ -56,9 +48,7 @@ class CNPJDocumentModel extends DocumentModel {
 
   /// responsable to take the document without validator digit, calculate it,
   /// and return the document with the validator digit
-  String applyValidatorDigit({
-    required String document,
-  }) {
+  String applyValidatorDigit({required String document}) {
     var sumDigits = 0;
     var multDigit = document.length - 7;
     var documentWithDigit = document;
