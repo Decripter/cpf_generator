@@ -1,4 +1,4 @@
-# cpf_generator
+# document_manager
 
 A new Flutter project.
 
