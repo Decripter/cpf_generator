@@ -32,11 +32,11 @@ void main() {
       assert(result == cnpjWithoutMask, 'Must be equal');
     });
 
-    test('shoud return true for validation of this invalid cnpj2', () {
+    test('shoud return false for validation of this invalid cnpj_2', () {
       final isValid = documentManager.validateDocument('11.222.333/0001-00');
       expect(isValid, false);
     });
-    test('shoud return true for validation of this valid cnpj2', () {
+    test('shoud return true for validation of this valid cnpj_2', () {
       final isValid = documentManager.validateDocument('11.222.333/0001-81');
       expect(isValid, true);
     });

@@ -32,7 +32,7 @@ void main() {
       expect(isValid, false);
     });
     test(
-      'Should return a valid cpf',
+      'should return a valid cpf',
       // ignore: unnecessary_parenthesis
       (() {
         final cpf = cpfManager.documentGenerator();
