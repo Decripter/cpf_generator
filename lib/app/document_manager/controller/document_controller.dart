@@ -1,4 +1,4 @@
-import 'package:cpf_generator/app/document_manager/controller/document_type.dart';
+import 'package:document_manager/app/document_manager/controller/document_type.dart';
 
 enum DocumentTypeClass {
   cpf,

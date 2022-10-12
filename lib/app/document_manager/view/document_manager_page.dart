@@ -1,4 +1,4 @@
-import 'package:cpf_generator/app/document_manager/controller/document_controller.dart';
+import 'package:document_manager/app/document_manager/controller/document_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

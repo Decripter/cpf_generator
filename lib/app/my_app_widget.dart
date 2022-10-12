@@ -1,4 +1,4 @@
-import 'package:cpf_generator/app/document_manager/view/document_manager_page.dart';
+import 'package:document_manager/app/document_manager/view/document_manager_page.dart';
 import 'package:flutter/material.dart';
 
 ///App base of aplicattion
