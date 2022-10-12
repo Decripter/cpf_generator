@@ -1,6 +1,9 @@
 import 'package:cpf_generator/app/document_manager/controller/document_type.dart';
 
-enum DocumentTypeClass { cpf, cnpj }
+enum DocumentTypeClass {
+  cpf,
+  cnpj,
+}
 
 class DocumentController {
   DocumentType documentType = DocumentType.cpf();

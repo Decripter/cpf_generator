@@ -8,7 +8,7 @@ class CNPJDocumentModel extends DocumentModel {
   // ignore: overridden_fields
   String value;
 
-  ///constructor
+  ///CNPJDocument class constructor
   CNPJDocumentModel(this.value);
 
   @override
